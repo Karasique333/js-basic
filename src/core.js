@@ -47,7 +47,12 @@ function isBinary(n) {
 }
 
 //Напишите функцию, которая находит N-е число Фибоначчи
-function fibonacci(n) {}
+function fibonacci(n) {
+    if (n <= 1) {
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
 
 /** Напишите функцию, которая принимает начальное значение и функцию операции
  * и возвращает функцию - выполняющую эту операцию.
@@ -60,7 +65,15 @@ function fibonacci(n) {}
  * console.log(sumFn(5)) - 15
  * console.log(sumFn(3)) - 18
  */
-function getOperationFn(initialValue, operatorFn) {}
+function getOperationFn(initialValue, operatorFn) {
+    let currentValue = initialValue;
+    return function (newValue) {
+        if (operatorFn !== undefined) {
+            currentValue = operatorFn(currentValue, newValue);
+        }
+        return currentValue;
+    };
+}
 
 /**
  * Напишите функцию создания генератора арифметической последовательности.
@@ -78,7 +91,14 @@ function getOperationFn(initialValue, operatorFn) {}
  * console.log(generator()); // 7
  * console.log(generator()); // 9
  */
-function sequence(start, step) {}
+function sequence(start = 0, step = 1) {
+    let currentValue = start;
+    return function generator() {
+        let temp = currentValue;
+        currentValue += step;
+        return temp;
+    };
+}
 
 /**
  * Напишите функцию deepEqual, которая принимает два значения
@@ -94,7 +114,41 @@ function sequence(start, step) {}
  * deepEqual({arr: [22, 33], text: 'text'}, {arr: [22, 33], text: 'text'}) // true
  * deepEqual({arr: [22, 33], text: 'text'}, {arr: [22, 3], text: 'text2'}) // false
  */
-function deepEqual(firstObject, secondObject) {}
+function deepEqual(firstObject, secondObject) {
+    if (firstObject === secondObject) {
+        return true;
+    }
+
+    if (
+        Number.isNaN(firstObject) === true &&
+        Number.isNaN(secondObject) === true
+    ) {
+        return true;
+    }
+
+    if (
+        firstObject == null ||
+        secondObject == null ||
+        typeof firstObject != 'object' ||
+        typeof secondObject != 'object'
+    ) {
+        return false;
+    }
+
+    if (Object.keys(firstObject).length !== Object.keys(secondObject).length) {
+        return false;
+    }
+
+    for (let val in firstObject) {
+        if (!(val in secondObject)) {
+            return false;
+        }
+        if (!deepEqual(firstObject[val], secondObject[val])) {
+            return false;
+        }
+    }
+    return true;
+}
 
 module.exports = {
     isInteger,
